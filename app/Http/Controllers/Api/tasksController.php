@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Project;
+use App\Models\Tasks;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class projectsController extends Controller
+class tasksController extends Controller
 {
     public function index (){
-        $project = Project::all();
+        $tasks = Tasks::all();
         $data = [
-            'projects' => $project,
+            'tasks' => $tasks,
             'status' => 200
         ];
         return response()->json($data,200);
@@ -21,8 +21,10 @@ class projectsController extends Controller
     public function crear (Request $request) {
 
         $validator = Validator::make($request->all(), [
-            'name'=> 'required|min:3|max:100',
-            'status'=> 'required'
+            'title'=> 'required|min:3|max:100',
+            'status'=> 'required',
+            'priority'=> 'required',
+            'due_date'=> 'required'
         ]);
 
         if($validator->fails()) {
@@ -34,22 +36,24 @@ class projectsController extends Controller
          return response()->json($data,400);   
         }
 
-        $project = Project::create([
-                        'name'=> $request->name,
+        $tasks = Tasks::create([
+                        'title'=> $request->title,
+                        'description'=>$request->description,
                         'status'=>$request->status,
-                        'description'=>$request->description
+                        'priority'=>$request->priority,
+                        'due_date'=>$request->due_date
                     ]);
         
-        if(!$project){
+        if(!$tasks){
             $data = [
-                'message' => 'Error al crear el proyecto',
+                'message' => 'Error al crear la tarea',
                 'status' => 500
             ];
             return response()->json($data,500);
         };
         
         $data = [
-            'project'=> $project,
+            'tasks'=> $tasks,
             'status' => 201
         ];
 
@@ -58,18 +62,18 @@ class projectsController extends Controller
     }
 
     public function mostrar($id){
-         $project = Project::find($id);
+         $tasks = Tasks::find($id);
 
-       if(!$project) {
+       if(!$tasks) {
             $data = [
-                'message' => 'Projecto no se encontro',
+                'message' => 'El task no se encontro',
                 'status' => 404
             ];
             return response()->json($data,404);
        }
 
        $data = [
-                'message' => $project,
+                'message' => $tasks,
                 'status' => 200
             ];
 
@@ -78,20 +82,20 @@ class projectsController extends Controller
 
     public function eliminar($id){
 
-       $project = Project::find($id);
+       $tasks = Tasks::find($id);
 
-       if(!$project) {
+       if(!$tasks) {
             $data = [
-                'message' => 'Projecto no se encontro',
+                'message' => 'El task no se encontro',
                 'status' => 404
             ];
             return response()->json($data,404);
        }
 
-       $project->delete();
+       $tasks->delete();
 
        $data = [
-                'message' => 'Projecto eliminado',
+                'message' => 'El task fue eliminado',
                 'status' => 200
             ];
 
@@ -100,19 +104,21 @@ class projectsController extends Controller
     }
 
     public function actualizar(Request $request, $id){
-         $project = Project::find($id);
+         $tasks = Tasks::find($id);
 
-        if(!$project) {
+        if(!$tasks) {
                 $data = [
-                    'message' => 'Projecto no se encontro',
+                    'message' => 'El task no se encontro',
                     'status' => 404
                 ];
                 return response()->json($data,404);
         }
 
        $validator = Validator::make($request->all(), [
-                'name'=> 'required|min:3|max:100',
-                'status'=> 'required'
+                'title'=> 'required|min:3|max:100',
+                'status'=> 'required',
+                'priority'=> 'required',
+                'due_date'=> 'required'
             ]);
         
         if($validator->fails()){
@@ -124,14 +130,17 @@ class projectsController extends Controller
          return response()->json($data,400);  
         }
 
-        $project->name= $request->name;
-        $project->description= $request->description;
-        $project->status=$request->status;
+        $tasks->title= $request->title;
+        $tasks->description= $request->description;
+        $tasks->status=$request->status;
+        $tasks->priority=$request->priority;
+        $tasks->due_date=$request->due_date;
 
-        $project->save();
+        $tasks->save();
+
         $data = [
                 'message' => 'Datos actualizados',
-                'project' => $project,
+                'tasks' => $tasks,
                 'status' => 200
             ];
          return response()->json($data,200);  

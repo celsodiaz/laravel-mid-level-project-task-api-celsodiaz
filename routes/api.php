@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\projectsController;
+use App\Http\Controllers\Api\tasksController;
 
 //RUTAS DE PROYECTOS
 Route::get('/projects', [projectsController::class, 'index'] );
@@ -17,23 +18,14 @@ Route::delete('/projects/{id}', [projectsController::class, 'eliminar']);
 
 //RUTAS DE TAREAS
 
-Route::get('/tasks', function () {
-    return 'Listado de tareas con filtros';
-});
+Route::get('/tasks', [tasksController::class, 'index'] );
 
-Route::post('/tasks', function () {
-    return 'Creando tareas';
-});
+Route::post('/tasks', [tasksController::class, 'crear']);
 
-Route::get('/tasks/{id}', function () {
-    return 'Detalle del tareas';
-});
+Route::get('/tasks/{id}',[tasksController::class, 'mostrar'] );
 
-Route::put('/tasks/{id}', function () {
-    return 'Actualizando el tareas';
-});
+Route::put('/tasks/{id}',[tasksController::class, 'actualizar'] );
 
-Route::delete('/tasks/{id}', function () {
-    return 'Eliminando el tareas';
-});
+Route::delete('/tasks/{id}', [tasksController::class, 'eliminar']);
+
 
