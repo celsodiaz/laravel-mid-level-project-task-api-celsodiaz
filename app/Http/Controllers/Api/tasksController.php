@@ -38,7 +38,7 @@ class tasksController extends Controller
 
         $tasks = Tasks::create([
                         'title'=> $request->title,
-                        'description'=>$request->description,
+                        'descripcion'=>$request->descripcion,
                         'status'=>$request->status,
                         'priority'=>$request->priority,
                         'due_date'=>$request->due_date
@@ -131,7 +131,7 @@ class tasksController extends Controller
         }
 
         $tasks->title= $request->title;
-        $tasks->description= $request->description;
+        $tasks->descripcion= $request->descripcion;
         $tasks->status=$request->status;
         $tasks->priority=$request->priority;
         $tasks->due_date=$request->due_date;
